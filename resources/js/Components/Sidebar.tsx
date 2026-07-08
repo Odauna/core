@@ -9,7 +9,7 @@ interface SidebarProps {
 const menuItems: SidebarMenuItem[] = [
     {
         label: "Dashboard",
-        icon: "fa-th-large",
+        icon: "fa-home",
         status: "active",
         href: "/dashboard",
     },
@@ -89,11 +89,24 @@ export default function Sidebar({ activeMenu, className = "" }: SidebarProps) {
 
     return (
         <aside
-            className={`bg-primary p-[15px] flex flex-col gap-[8px] rounded-none ${className}`}
+            className={`flex w-[260px] bg-primary flex-col py-6 shrink-0 z-10 ${className}`}
         >
-            {items.map((item) => (
-                <SidebarItem key={item.label} {...item} />
-            ))}
+            {/* Brand */}
+            <div className="flex items-center gap-3 px-6 mb-10">
+                <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-primary font-bold text-[13px] shrink-0">
+                    UII
+                </div>
+                <span className="text-white font-bold text-[14px] tracking-wide leading-tight">
+                    SMA UII YOGYAKARTA
+                </span>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex flex-col gap-1 px-4 flex-1">
+                {items.map((item) => (
+                    <SidebarItem key={item.label} {...item} />
+                ))}
+            </nav>
         </aside>
     );
 }
