@@ -31,7 +31,7 @@ class AttendanceApiController extends Controller
         $student = $this->getStudent->handle($request->user());
 
         if (! $student) {
-            return response()->json(['message' => 'Student not found.'], 404);
+            return response()->json(['message' => 'Siswa tidak ditemukan.'], 404);
         }
 
         $today = now()->toDateString();
@@ -50,7 +50,7 @@ class AttendanceApiController extends Controller
         $student = $this->getStudent->handle($request->user());
 
         if (! $student) {
-            return response()->json(['message' => 'Student not found.'], 404);
+            return response()->json(['message' => 'Siswa tidak ditemukan.'], 404);
         }
 
         try {
