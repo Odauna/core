@@ -26,8 +26,8 @@ class AnalyticsService
         $present = $attendances->where('status', 'Present')->count();
         $late = $attendances->where('status', 'Late')->count();
         $sick = LeaveRequest::where('approval_status', 'Approved')
-            ->where('start_date', '<=', $date)
-            ->where('end_date', '>=', $date)
+            ->whereDate('start_date', '<=', $date)
+            ->whereDate('end_date', '>=', $date)
             ->count();
 
         $hadirTerdata = $present + $late;
@@ -108,8 +108,8 @@ class AnalyticsService
         $startOfMonth = now()->setDate($year, $month, 1)->startOfMonth();
         $endOfMonth = now()->setDate($year, $month, 1)->endOfMonth();
         $sickPermit = LeaveRequest::where('student_id', $studentId)
-            ->where('start_date', '<=', $endOfMonth)
-            ->where('end_date', '>=', $startOfMonth)
+            ->whereDate('start_date', '<=', $endOfMonth)
+            ->whereDate('end_date', '>=', $startOfMonth)
             ->whereIn('approval_status', ['Approved', 'Pending'])
             ->count();
 
