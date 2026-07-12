@@ -62,7 +62,7 @@ const categoryLabels: Record<string, string> = {
     Other: "Lainnya",
 };
 
-export default function PengajuanIzin({ leaveRequests, filters }: PageProps) {
+export default function LeaveRequests({ leaveRequests, filters }: PageProps) {
     const [statusTab, setStatusTab] = useState(filters.status ?? "");
     const [categoryFilter, setCategoryFilter] = useState(
         filters.category ?? "",

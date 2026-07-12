@@ -68,7 +68,7 @@ const tabs = [
     { key: "guardians", label: "Wali Murid", icon: "fa-user-friends" },
 ];
 
-export default function DataMaster({
+export default function MasterData({
     students,
     teachers,
     schoolClasses,

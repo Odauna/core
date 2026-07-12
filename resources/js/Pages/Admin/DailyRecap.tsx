@@ -62,7 +62,7 @@ const statusLabels: Record<string, string> = {
     Permission: "Izin",
 };
 
-export default function RekapHarian({
+export default function DailyRecap({
     classes,
     selectedClassId,
     date,

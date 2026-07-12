@@ -50,7 +50,7 @@ interface PageProps {
     monthlyTrend: MonthlyTrend[];
 }
 
-export default function RiwayatKehadiran({
+export default function AttendanceHistory({
     student,
     attendances,
     leaveRequests,

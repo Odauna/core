@@ -30,7 +30,7 @@ interface PageProps {
     stats: Stats;
 }
 
-export default function SiswaDashboard({
+export default function StudentDashboard({
     student,
     todayAttendance,
     stats,

@@ -76,7 +76,7 @@ const categoryFilters = [
 
 // ─── Page ───
 
-export default function VerifikasiIzin({
+export default function LeaveVerification({
     leaveRequests,
     filters,
 }: VerifikasiIzinProps) {

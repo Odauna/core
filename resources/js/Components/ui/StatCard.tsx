@@ -9,7 +9,7 @@ interface StatCardProps {
 
 /*
  * Figma: cards have a thin colored left-border (border-l-4) and subtle border around.
- * The "Total Siswa" (grey) card has no special left-border color.
+ * The "Total Student" (grey) card has no special left-border color.
  * Number is large (text-[34px]), bold, colored.
  * Label is small (text-[11px]), uppercase, muted.
  */

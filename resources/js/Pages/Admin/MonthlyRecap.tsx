@@ -26,7 +26,7 @@ interface PageProps {
     studentsData: StudentSummary[];
 }
 
-export default function RekapBulanan({
+export default function MonthlyRecap({
     classes,
     selectedClassId,
     studentsData,

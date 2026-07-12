@@ -16,7 +16,7 @@ export default function SidebarItem({
 }: SidebarItemProps) {
     const isActive = status === "active";
 
-    // Disamakan persis dengan SiswaLayout & GuruLayout
+    // Consistent with StudentLayout & TeacherLayout
     const classes = [
         "flex items-center gap-3 px-4 py-3 rounded-lg font-inter text-[14px] transition-all",
         isActive

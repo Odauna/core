@@ -56,7 +56,7 @@ const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 // ─── Page ───
 
-export default function AturWaktuLibur({
+export default function HolidaySettings({
     timeSettings,
     holidays,
     filters,

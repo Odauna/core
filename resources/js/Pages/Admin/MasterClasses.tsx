@@ -45,7 +45,7 @@ const levelLabels: Record<string, string> = {
     XII: "Kelas XII",
 };
 
-export default function MasterKelas({
+export default function MasterClasses({
     schoolClasses,
     teachers,
     filters,
