@@ -137,10 +137,10 @@ export default function Dashboard({
             {/* ── Stat Cards ── */}
             <section className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-5">
                 <StatCard label="Total Siswa"   value={stats.total_students} color="grey"  />
-                <StatCard label="Verified Present" value={stats.verified_present} color="green" />
-                <StatCard label="Terlambat"        value={stats.late}             color="amber" />
-                <StatCard label="Sick / Permit"    value={stats.sick_permit}      color="blue"  />
-                <StatCard label="Absent"           value={stats.absent}           color="red"   />
+                <StatCard label="Terverifikasi Hadir" value={stats.verified_present} color="green" />
+                <StatCard label="Terlambat"            value={stats.late}             color="amber" />
+                <StatCard label="Sakit / Izin"         value={stats.sick_permit}      color="blue"  />
+                <StatCard label="Tidak Hadir"          value={stats.absent}           color="red"   />
             </section>
 
             {/* ── Perhatian Khusus Hari Ini ── */}

@@ -180,7 +180,7 @@ export default function WaliMuridDashboard({
                   value={trendStats?.late ?? 0}
                   color="amber"
                 />
-                <StatCard label="Absent" value={trendStats?.absent ?? 0} color="red" />
+                <StatCard label="Tidak Hadir" value={trendStats?.absent ?? 0} color="red" />
               </div>
               <AttendanceChart
                 data={monthlyTrend.map((m) => ({
@@ -234,7 +234,7 @@ export default function WaliMuridDashboard({
           {/* Stats Overview */}
           {stats && (
             <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-              <StatCard label="Days Recorded" value={stats.total_days} color="grey" />
+              <StatCard label="Total Hari" value={stats.total_days} color="grey" />
               <StatCard label="Hadir" value={stats.present} color="green" />
               <StatCard label="Terlambat" value={stats.late} color="amber" />
               <StatCard label="Izin Pending" value={stats.pending_leave} color="blue" />

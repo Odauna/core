@@ -123,7 +123,7 @@ export default function AttendanceHistory({
                     value={stats.late}
                     color="amber"
                 />
-                <StatCard label="Absent" value={stats.absent} color="red" />
+                <StatCard label="Tidak Hadir" value={stats.absent} color="red" />
             </section>
 
             {/* Monthly Trend Chart */}
