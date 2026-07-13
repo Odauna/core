@@ -93,16 +93,24 @@ export default function MasterData({
     activeTab,
     filters,
 }: PageProps) {
-    const [currentTab, setCurrentTab] = useState(activeTabMap[activeTab ?? ""] ?? "students");
+    const [currentTab, setCurrentTab] = useState(
+        activeTabMap[activeTab ?? ""] ?? "students",
+    );
     const [search, setSearch] = useState(filters.search ?? "");
     const [, setSelectedIds] = useState<number[]>([]); // value not needed, only setter for reset
     const [importModalOpen, setImportModalOpen] = useState(false);
-    const [importEntity, setImportEntity] = useState<"students" | "teachers">("students");
+    const [importEntity, setImportEntity] = useState<"students" | "teachers">(
+        "students",
+    );
 
     const switchTab = (tab: string) => {
         setCurrentTab(tab);
         setSelectedIds([]);
-        router.get(tabRoutes[tab] ?? "/master-data", {}, { preserveState: true });
+        router.get(
+            tabRoutes[tab] ?? "/master-data",
+            {},
+            { preserveState: true },
+        );
     };
 
     const handleSearch = (e: React.FormEvent) => {
@@ -129,7 +137,9 @@ export default function MasterData({
             header: "Identitas Nomor",
             render: (s) => (
                 <div>
-                    <div className="font-semibold text-text-primary">{s.nis}</div>
+                    <div className="font-semibold text-text-primary">
+                        {s.nis}
+                    </div>
                     <div className="text-[12px] font-medium text-text-inactive">
                         NISN: {s.nisn}
                     </div>
@@ -183,7 +193,9 @@ export default function MasterData({
             key: "teacher_code",
             header: "Kode Guru",
             render: (t) => (
-                <p className="font-semibold text-text-primary">{t.teacher_code}</p>
+                <p className="font-semibold text-text-primary">
+                    {t.teacher_code}
+                </p>
             ),
         },
         {
@@ -191,7 +203,7 @@ export default function MasterData({
             header: "Nama Guru",
             render: (t) => (
                 <p className="font-semibold text-primary">{t.name}</p>
-            )
+            ),
         },
         {
             key: "email",
@@ -304,173 +316,213 @@ export default function MasterData({
 
     return (
         <AdminLayout title="Manajemen Data Master" activeMenu="Data Master">
-            <h1 className="text-[18px] font-bold text-text-primary font-inter mb-6">
-                Manajemen Data Master
-            </h1>
+            <div>
+                <h1 className="text-[18px] font-bold text-text-primary font-inter mb-6">
+                    Manajemen Data Master
+                </h1>
 
-                        {/* Tabs */}
-                        <div className="flex gap-1 border-b border-border mb-6">
-                            {tabs.map((t) => (
-                                <button
-                                    key={t.key}
-                                    onClick={() => switchTab(t.key)}
-                                    className={`px-4 py-2.5 text-[14px] font-inter transition-colors border-b-2 -mb-px inline-flex items-center gap-2 ${
-                                        currentTab === t.key
-                                            ? "text-primary border-primary font-bold"
-                                            : "text-text-inactive border-transparent hover:text-text-primary"
-                                    }`}
-                                    type="button"
-                                >
-                                    <i className={`fas ${t.icon}`} />
-                                    {t.label}
-                                </button>
-                            ))}
+                {/* Tabs */}
+                <div className="flex gap-1 border-b border-border mb-6">
+                    {tabs.map((t) => (
+                        <button
+                            key={t.key}
+                            onClick={() => switchTab(t.key)}
+                            className={`px-4 py-2.5 text-[14px] font-inter transition-colors border-b-2 -mb-px inline-flex items-center gap-2 ${
+                                currentTab === t.key
+                                    ? "text-primary border-primary font-bold"
+                                    : "text-text-inactive border-transparent hover:text-text-primary"
+                            }`}
+                            type="button"
+                        >
+                            <i className={`fas ${t.icon}`} />
+                            {t.label}
+                        </button>
+                    ))}
+                </div>
+
+                {/* ── Siswa Tab ── */}
+                {currentTab === "students" && students?.data && (
+                    <div>
+                        <Toolbar
+                            search={search}
+                            setSearch={setSearch}
+                            handleSearch={handleSearch}
+                            onImport={() => {
+                                setImportEntity("students");
+                                setImportModalOpen(true);
+                            }}
+                        />
+                        <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
+                            <Table
+                                columns={studentColumns}
+                                data={students.data}
+                                keyExtractor={(s: Student) => s.id}
+                            />
+                            {students.total > 0 && (
+                                <Pagination
+                                    currentPage={students.current_page}
+                                    totalPages={students.last_page}
+                                    totalItems={students.total}
+                                    onPageChange={(page) =>
+                                        router.get(
+                                            "/master-data",
+                                            {
+                                                page,
+                                            },
+                                            { preserveState: true },
+                                        )
+                                    }
+                                />
+                            )}
                         </div>
+                    </div>
+                )}
 
-                        {/* ── Siswa Tab ── */}
-                        {currentTab === "students" && students?.data && (
-                            <div>
-                                <Toolbar
-                                    search={search}
-                                    setSearch={setSearch}
-                                    handleSearch={handleSearch}
-                                    onImport={() => { setImportEntity("students"); setImportModalOpen(true); }}
+                {/* ── Guru Tab ── */}
+                {currentTab === "teachers" && teachers?.data && (
+                    <div>
+                        <Toolbar
+                            search={search}
+                            setSearch={setSearch}
+                            handleSearch={handleSearch}
+                            onImport={() => {
+                                setImportEntity("teachers");
+                                setImportModalOpen(true);
+                            }}
+                        />
+                        <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
+                            <Table
+                                columns={teacherColumns}
+                                data={teachers.data}
+                                keyExtractor={(t: Teacher) => t.id}
+                            />
+                            {teachers.total > 0 && (
+                                <Pagination
+                                    currentPage={teachers.current_page}
+                                    totalPages={teachers.last_page}
+                                    totalItems={teachers.total}
+                                    onPageChange={(page) =>
+                                        router.get(
+                                            "/master-data/teachers",
+                                            {
+                                                page,
+                                            },
+                                            { preserveState: true },
+                                        )
+                                    }
                                 />
-                                <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
-                                    <Table
-                                        columns={studentColumns}
-                                        data={students.data}
-                                        keyExtractor={(s: Student) => s.id}
-                                    />
-                                    {students.total > 0 && (
-                                        <Pagination
-                                            currentPage={students.current_page}
-                                            totalPages={students.last_page}
-                                            totalItems={students.total}
-                                            onPageChange={(page) =>
-                                                router.get(
-                                                    "/master-data",
-                                                    {
-                                                        page,
-                                                    },
-                                                    { preserveState: true },
-                                                )
-                                            }
-                                        />
-                                    )}
-                                </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
+                    </div>
+                )}
 
-                        {/* ── Guru Tab ── */}
-                        {currentTab === "teachers" && teachers?.data && (
-                            <div>
-                                <Toolbar
-                                    search={search}
-                                    setSearch={setSearch}
-                                    handleSearch={handleSearch}
-                                    onImport={() => { setImportEntity("teachers"); setImportModalOpen(true); }}
-/>
-                                <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
-                                    <Table
-                                        columns={teacherColumns}
-                                        data={teachers.data}
-                                        keyExtractor={(t: Teacher) => t.id}
-                                    />
-                                    {teachers.total > 0 && (
-                                        <Pagination
-                                            currentPage={teachers.current_page}
-                                            totalPages={teachers.last_page}
-                                            totalItems={teachers.total}
-                                            onPageChange={(page) =>
-                                                router.get(
-                                                    "/master-data/teachers",
-                                                    {
-                                                        page,
-                                                    },
-                                                    { preserveState: true },
-                                                )
-                                            }
-                                        />
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* ── Kelas Tab ── */}
-                        {currentTab === "class" && schoolClasses?.data && (
-                            <div>
-                                <Toolbar
-                                    search={search}
-                                    setSearch={setSearch}
-                                    handleSearch={handleSearch}
+                {/* ── Kelas Tab ── */}
+                {currentTab === "class" && schoolClasses?.data && (
+                    <div className="grid grid-cols-5 gap-3">
+                        <div className="col-span-3">
+                            <Toolbar
+                                search={search}
+                                setSearch={setSearch}
+                                handleSearch={handleSearch}
+                            />
+                            <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
+                                <Table
+                                    columns={classColumns}
+                                    data={schoolClasses.data}
+                                    keyExtractor={(c: SchoolClass) => c.id}
                                 />
-                                <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
-                                    <Table
-                                        columns={classColumns}
-                                        data={schoolClasses.data}
-                                        keyExtractor={(c: SchoolClass) => c.id}
+                                {schoolClasses.total > 0 && (
+                                    <Pagination
+                                        currentPage={schoolClasses.current_page}
+                                        totalPages={schoolClasses.last_page}
+                                        totalItems={schoolClasses.total}
+                                        onPageChange={(page) =>
+                                            router.get(
+                                                "/master-data/classes",
+                                                {
+                                                    page,
+                                                },
+                                                { preserveState: true },
+                                            )
+                                        }
                                     />
-                                    {schoolClasses.total > 0 && (
-                                        <Pagination
-                                            currentPage={
-                                                schoolClasses.current_page
-                                            }
-                                            totalPages={schoolClasses.last_page}
-                                            totalItems={schoolClasses.total}
-                                            onPageChange={(page) =>
-                                                router.get(
-                                                    "/master-data/classes",
-                                                    {
-                                                        page,
-                                                    },
-                                                    { preserveState: true },
-                                                )
-                                            }
-                                        />
-                                    )}
-                                </div>
+                                )}
                             </div>
-                        )}
+                        </div>
+                        <div className="col-span-2 bg-surface block border-3 border-dashed rounded-2xl border-gray-400">
+                            <div className="grid grid-rows-5 m-3">
+                                <h2 className="text-primary font-semibold">
+                                    Buat Kelas Baru
+                                </h2>
+                                <div>
+                                    <label>Nama / Kode Kelas</label>
+                                    <input
+                                        type="text"
+                                        id="kode_kelas"
+                                        className="min-w-0 w-full flex-auto rounded-md bg-white/5 border-gray-300 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                                    />
+                                </div>
+                                <div>
+                                    <label>Tugaskan Wali Kelas</label>
+                                    <input
+                                        type="text"
+                                        id="wali_kelas"
+                                        className="min-w-0 w-full flex-auto rounded-md bg-white/5 border-gray-300 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                                    />
+                                </div>
+                                <div>
+                                    <p>Kapasitas Maksimal</p>
+                                    <input
+                                        type="text"
+                                        id="kapasitas_kelas"
+                                        className="min-w-0 w-full flex-auto rounded-md bg-white/5 border-gray-300 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                                    />
+                                </div>
+                                <Button>Simpan Kelas Baru</Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
-                        {/* ── Wali Tab ── */}
-                        {currentTab === "guardians" && guardians?.data && (
-                            <div>
-                                <Toolbar
-                                    search={search}
-                                    setSearch={setSearch}
-                                    handleSearch={handleSearch}
+                {/* ── Wali Tab ── */}
+                {currentTab === "guardians" && guardians?.data && (
+                    <div>
+                        <Toolbar
+                            search={search}
+                            setSearch={setSearch}
+                            handleSearch={handleSearch}
+                        />
+                        <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
+                            <Table
+                                columns={guardianColumns}
+                                data={guardians.data}
+                                keyExtractor={(w: Guardian) => w.id}
+                            />
+                            {guardians.total > 0 && (
+                                <Pagination
+                                    currentPage={guardians.current_page}
+                                    totalPages={guardians.last_page}
+                                    totalItems={guardians.total}
+                                    onPageChange={(page) =>
+                                        router.get(
+                                            "/master-data/guardians",
+                                            {
+                                                page,
+                                            },
+                                            { preserveState: true },
+                                        )
+                                    }
                                 />
-                                <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
-                                    <Table
-                                        columns={guardianColumns}
-                                        data={guardians.data}
-                                        keyExtractor={(w: Guardian) => w.id}
-                                    />
-                                    {guardians.total > 0 && (
-                                        <Pagination
-                                            currentPage={guardians.current_page}
-                                            totalPages={guardians.last_page}
-                                            totalItems={guardians.total}
-                                            onPageChange={(page) =>
-                                                router.get(
-                                                    "/master-data/guardians",
-                                                    {
-                                                        page,
-                                                    },
-                                                    { preserveState: true },
-                                                )
-                                            }
-                                        />
-                                    )}
-                                </div>
-                            </div>
-                        )}
-            <ImportModal
-                open={importModalOpen}
-                onClose={() => setImportModalOpen(false)}
-                entity={importEntity}
-            />
+                            )}
+                        </div>
+                    </div>
+                )}
+                <ImportModal
+                    open={importModalOpen}
+                    onClose={() => setImportModalOpen(false)}
+                    entity={importEntity}
+                />
+            </div>
         </AdminLayout>
     );
 }
