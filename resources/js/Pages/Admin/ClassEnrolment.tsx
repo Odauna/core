@@ -33,7 +33,7 @@ interface PageProps {
     unassignedStudents: UnassignedStudent[];
 }
 
-export default function EnrolmentKelas({
+export default function ClassEnrolment({
     classes,
     selectedClassId,
     selectedClass,
