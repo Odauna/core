@@ -57,9 +57,23 @@ interface PageProps {
     teachers?: PaginatedData<Teacher>;
     schoolClasses?: PaginatedData<SchoolClass>;
     guardians?: PaginatedData<Guardian>;
-    tab: string;
+    activeTab?: string;
     filters: Record<string, string | undefined>;
 }
+
+const tabRoutes: Record<string, string> = {
+    students: "/master-data",
+    teachers: "/master-data/teachers",
+    class: "/master-data/classes",
+    guardians: "/master-data/guardians",
+};
+
+const activeTabMap: Record<string, string> = {
+    siswa: "students",
+    guru: "teachers",
+    classes: "class",
+    wali: "guardians",
+};
 
 const tabs = [
     { key: "students", label: "Siswa", icon: "fa-user-graduate" },
@@ -73,9 +87,10 @@ export default function MasterData({
     teachers,
     schoolClasses,
     guardians,
+    activeTab,
     filters,
 }: PageProps) {
-    const [currentTab, setCurrentTab] = useState(filters.tab ?? "students");
+    const [currentTab, setCurrentTab] = useState(activeTabMap[activeTab ?? ""] ?? "students");
     const [search, setSearch] = useState(filters.search ?? "");
     const [, setSelectedIds] = useState<number[]>([]); // value not needed, only setter for reset
     const [importModalOpen, setImportModalOpen] = useState(false);
@@ -84,14 +99,14 @@ export default function MasterData({
     const switchTab = (tab: string) => {
         setCurrentTab(tab);
         setSelectedIds([]);
-        router.get("/master-data", { tab }, { preserveState: true });
+        router.get(tabRoutes[tab] ?? "/master-data", {}, { preserveState: true });
     };
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         router.get(
-            "/master-data",
-            { tab: currentTab, search: search || undefined },
+            tabRoutes[currentTab] ?? "/master-data",
+            { search: search || undefined },
             { preserveState: true },
         );
     };
@@ -111,14 +126,22 @@ export default function MasterData({
             header: "Identitas Nomor",
             render: (s) => (
                 <div>
-                    <div className="font-medium text-text-primary">{s.nis}</div>
-                    <div className="text-[12px] text-text-inactive">
+                    <div className="font-semibold text-text-primary">{s.nis}</div>
+                    <div className="text-[12px] font-medium text-text-inactive">
                         NISN: {s.nisn}
                     </div>
                 </div>
             ),
         },
-        { key: "name", header: "Nama Siswa" },
+        {
+            key: "name",
+            header: "Nama Siswa",
+            render: (s) => (
+                <div>
+                    <div className="font-semibold text-primary">{s.name}</div>
+                </div>
+            ),
+        },
         { key: "class", header: "Kelas", render: (s) => s.class?.name ?? "-" },
         {
             key: "status",
@@ -153,8 +176,20 @@ export default function MasterData({
     // ─── Teacher Columns ───
 
     const teacherColumns: Column<Teacher>[] = [
-        { key: "teacher_code", header: "Kode Guru" },
-        { key: "name", header: "Nama Guru" },
+        {
+            key: "teacher_code",
+            header: "Kode Guru",
+            render: (t) => (
+                <p className="font-semibold text-text-primary">{t.teacher_code}</p>
+            ),
+        },
+        {
+            key: "name",
+            header: "Nama Guru",
+            render: (t) => (
+                <p className="font-semibold text-primary">{t.name}</p>
+            )
+        },
         {
             key: "email",
             header: "Email",
@@ -197,9 +232,8 @@ export default function MasterData({
             render: (c) => c.teacher?.name ?? "-",
         },
         {
-            key: "student_count",
+            key: "students_count",
             header: "Jumlah Siswa",
-            render: () => "-",
         },
         {
             key: "actions",
@@ -290,7 +324,7 @@ export default function MasterData({
                         </div>
 
                         {/* ── Siswa Tab ── */}
-                        {currentTab === "students" && students && (
+                        {currentTab === "students" && students?.data && (
                             <div>
                                 <Toolbar
                                     search={search}
@@ -313,7 +347,6 @@ export default function MasterData({
                                                 router.get(
                                                     "/master-data",
                                                     {
-                                                        tab: "students",
                                                         page,
                                                     },
                                                     { preserveState: true },
@@ -326,7 +359,7 @@ export default function MasterData({
                         )}
 
                         {/* ── Guru Tab ── */}
-                        {currentTab === "teachers" && teachers && (
+                        {currentTab === "teachers" && teachers?.data && (
                             <div>
                                 <Toolbar
                                     search={search}
@@ -347,9 +380,8 @@ export default function MasterData({
                                             totalItems={teachers.total}
                                             onPageChange={(page) =>
                                                 router.get(
-                                                    "/master-data",
+                                                    "/master-data/teachers",
                                                     {
-                                                        tab: "teachers",
                                                         page,
                                                     },
                                                     { preserveState: true },
@@ -362,7 +394,7 @@ export default function MasterData({
                         )}
 
                         {/* ── Kelas Tab ── */}
-                        {currentTab === "class" && schoolClasses && (
+                        {currentTab === "class" && schoolClasses?.data && (
                             <div>
                                 <Toolbar
                                     search={search}
@@ -384,9 +416,8 @@ export default function MasterData({
                                             totalItems={schoolClasses.total}
                                             onPageChange={(page) =>
                                                 router.get(
-                                                    "/master-data",
+                                                    "/master-data/classes",
                                                     {
-                                                        tab: "class",
                                                         page,
                                                     },
                                                     { preserveState: true },
@@ -399,7 +430,7 @@ export default function MasterData({
                         )}
 
                         {/* ── Wali Tab ── */}
-                        {currentTab === "guardians" && guardians && (
+                        {currentTab === "guardians" && guardians?.data && (
                             <div>
                                 <Toolbar
                                     search={search}
@@ -419,9 +450,8 @@ export default function MasterData({
                                             totalItems={guardians.total}
                                             onPageChange={(page) =>
                                                 router.get(
-                                                    "/master-data",
+                                                    "/master-data/guardians",
                                                     {
-                                                        tab: "guardians",
                                                         page,
                                                     },
                                                     { preserveState: true },
@@ -484,5 +514,3 @@ function Toolbar({
         </div>
     );
 }
-
-

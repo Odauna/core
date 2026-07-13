@@ -29,7 +29,7 @@ class StudentController extends Controller
         return Inertia::render('Admin/MasterData', [
             'activeTab' => 'siswa',
             'students' => $students,
-            'classes' => $classes,
+            'schoolClasses' => $classes,
             'filters' => request()->only(['search', 'class_id', 'status']),
         ]);
     }
