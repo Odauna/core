@@ -16,7 +16,10 @@ import type { Column } from "@/Components/ui/Table";
 interface SchoolClass {
     id: number;
     name: string;
+    level: string;
+    capacity: number;
     teacher: { id: number; name: string } | null;
+    students_count: number;
 }
 
 interface Student {
@@ -234,6 +237,7 @@ export default function MasterData({
         {
             key: "students_count",
             header: "Jumlah Siswa",
+            render: (c) => `${c.students_count}/${c.capacity}`,
         },
         {
             key: "actions",

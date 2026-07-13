@@ -11,9 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property int|null $teacher_id
  * @property string $name
+ * @property string $level
+ * @property int $capacity
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $level
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Student> $students
  * @property-read int|null $students_count
  * @property-read \App\Models\Teacher|null $teacher
@@ -35,7 +36,7 @@ class SchoolClass extends Model
 
     protected $table = 'school_classes';
 
-    protected $fillable = ['name', 'level', 'teacher_id'];
+    protected $fillable = ['name', 'level', 'teacher_id', 'capacity'];
 
     public function teacher(): BelongsTo
     {
