@@ -74,7 +74,7 @@ export default function DailyRecap({
 
     const handleFilter = () => {
         router.get(
-            "/admin/daily-recap",
+            "/daily-recap",
             {
                 class_id: classId || undefined,
                 date: dateVal || undefined,

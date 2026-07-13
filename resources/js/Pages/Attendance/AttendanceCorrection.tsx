@@ -35,7 +35,7 @@ export default function KoreksiAbsensi({ students, classes, filters }: Props) {
   }>({ open: false, student: null, newStatus: 'Present', reason: '' })
 
   function applyFilter() {
-    router.get('/admin/attendance-correction', {
+    router.get('/attendance-correction', {
       date: selectedDate,
       class_id: selectedClass || undefined,
     })
@@ -52,7 +52,7 @@ export default function KoreksiAbsensi({ students, classes, filters }: Props) {
 
   function submitOverride() {
     if (!modal.student || !modal.reason.trim()) return
-    router.post('/admin/attendance-correction', {
+    router.post('/attendance-correction', {
       student_id: modal.student.id,
       date: selectedDate,
       new_status: modal.newStatus,
@@ -63,7 +63,7 @@ export default function KoreksiAbsensi({ students, classes, filters }: Props) {
 
   function deleteOverride(overrideId: number) {
     if (!confirm('Hapus override ini?')) return
-    router.delete(`/admin/attendance-correction/${overrideId}`)
+    router.delete(`/attendance-correction/${overrideId}`)
   }
 
   const statusBadge = (status: string) => {

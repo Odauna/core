@@ -46,7 +46,7 @@ export default function ClassEnrolment({
 
     const handleFilter = () => {
         router.get(
-            "/admin/class-enrolment",
+            "/class-enrolment",
             { class_id: classId || undefined },
             { preserveState: true },
         );
@@ -58,7 +58,7 @@ export default function ClassEnrolment({
 
     const confirmRemove = () => {
         if (removeConfirmId === null) return;
-        router.delete(`/admin/class-enrolment/remove/${removeConfirmId}`, {
+        router.delete(`/class-enrolment/remove/${removeConfirmId}`, {
             preserveState: true,
             onSuccess: () => setRemoveConfirmId(null),
         });
@@ -66,7 +66,7 @@ export default function ClassEnrolment({
 
     const handleAssign = (studentId: number) => {
         router.post(
-            "/admin/class-enrolment/assign",
+            "/class-enrolment/assign",
             {
                 student_id: studentId,
                 class_id: classId,

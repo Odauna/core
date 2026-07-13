@@ -14,19 +14,19 @@ interface StatCardProps {
  * Label is small (text-[11px]), uppercase, muted.
  */
 const accentBorder: Record<StatColor, string> = {
-    green: "border-l-[3px] border-l-success",
-    amber: "border-l-[3px] border-l-warning",
-    blue:  "border-l-[3px] border-l-primary",
-    red:   "border-l-[3px] border-l-danger",
-    grey:  "",
+    green: "border-success",
+    amber: "border-warning",
+    blue: "border-primary",
+    red: "border-danger",
+    grey: "border-secondary",
 };
 
 const valueColor: Record<StatColor, string> = {
     green: "text-success",
     amber: "text-warning",
-    blue:  "text-primary",
-    red:   "text-danger",
-    grey:  "text-text-primary",
+    blue: "text-primary",
+    red: "text-danger",
+    grey: "text-text-primary",
 };
 
 export default function StatCard({
@@ -37,7 +37,7 @@ export default function StatCard({
 }: StatCardProps) {
     return (
         <article
-            className={`flex flex-col gap-0.5 bg-surface border border-border rounded-lg px-5 py-4 min-w-[130px] shadow-sm ${accentBorder[color]}`}
+            className={`flex flex-col gap-0.5 bg-surface border border-border rounded-lg px-5 py-4 min-w-[130px] shadow-sm border-1 border-t-3 ${accentBorder[color]}`}
         >
             <span
                 className={`text-[34px] font-bold font-inter leading-none ${valueColor[color]}`}

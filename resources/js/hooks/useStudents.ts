@@ -37,7 +37,7 @@ export function useStudents() {
         params: FetchStudentsParams = {},
         options?: UseStudentsOptions,
     ) => {
-        router.get("/admin/master-data", params, {
+        router.get("/master-data", params, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,
@@ -48,7 +48,7 @@ export function useStudents() {
         data: CreateStudentData,
         options?: UseStudentsOptions,
     ) => {
-        router.post("/admin/master-data/students", data, {
+        router.post("/master-data/students", data, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,
@@ -60,7 +60,7 @@ export function useStudents() {
         options?: UseStudentsOptions,
     ) => {
         const { id, ...rest } = data;
-        router.put(`/admin/master-data/students/${id}`, rest, {
+        router.put(`/master-data/students/${id}`, rest, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,
@@ -68,7 +68,7 @@ export function useStudents() {
     };
 
     const deleteStudent = (id: number, options?: UseStudentsOptions) => {
-        router.delete(`/admin/master-data/students/${id}`, {
+        router.delete(`/master-data/students/${id}`, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,

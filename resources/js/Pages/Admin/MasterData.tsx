@@ -84,13 +84,13 @@ export default function MasterData({
     const switchTab = (tab: string) => {
         setCurrentTab(tab);
         setSelectedIds([]);
-        router.get("/admin/master-data", { tab }, { preserveState: true });
+        router.get("/master-data", { tab }, { preserveState: true });
     };
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         router.get(
-            "/admin/master-data",
+            "/master-data",
             { tab: currentTab, search: search || undefined },
             { preserveState: true },
         );
@@ -98,7 +98,7 @@ export default function MasterData({
 
     const handleDelete = (entity: string, id: number) => {
         if (!confirm("Hapus data ini?")) return;
-        router.delete(`/admin/master-data/${entity}/${id}`, {
+        router.delete(`/master-data/${entity}/${id}`, {
             preserveState: true,
         });
     };
@@ -311,7 +311,7 @@ export default function MasterData({
                                             totalItems={students.total}
                                             onPageChange={(page) =>
                                                 router.get(
-                                                    "/admin/master-data",
+                                                    "/master-data",
                                                     {
                                                         tab: "students",
                                                         page,
@@ -347,7 +347,7 @@ export default function MasterData({
                                             totalItems={teachers.total}
                                             onPageChange={(page) =>
                                                 router.get(
-                                                    "/admin/master-data",
+                                                    "/master-data",
                                                     {
                                                         tab: "teachers",
                                                         page,
@@ -384,7 +384,7 @@ export default function MasterData({
                                             totalItems={schoolClasses.total}
                                             onPageChange={(page) =>
                                                 router.get(
-                                                    "/admin/master-data",
+                                                    "/master-data",
                                                     {
                                                         tab: "class",
                                                         page,
@@ -419,7 +419,7 @@ export default function MasterData({
                                             totalItems={guardians.total}
                                             onPageChange={(page) =>
                                                 router.get(
-                                                    "/admin/master-data",
+                                                    "/master-data",
                                                     {
                                                         tab: "guardians",
                                                         page,

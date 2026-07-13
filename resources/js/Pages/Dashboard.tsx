@@ -23,7 +23,7 @@ interface AttentionStudent {
     name: string;
     nis: string;
     nisn: string;
-    status: string;           // Present | Late | Absent | Pending | Permission
+    status: string; // Present | Late | Absent | Pending | Permission
     check_in_time: string | null;
     keterangan: string | null;
     leave_request_id: number | null;
@@ -34,7 +34,11 @@ interface DashboardProps {
     pendingLeaveCount: number;
     classes: SchoolClass[];
     selectedClassId: number | null;
-    classDetail: { class: SchoolClass; date: string; students: AttentionStudent[] } | null;
+    classDetail: {
+        class: SchoolClass;
+        date: string;
+        students: AttentionStudent[];
+    } | null;
     selectedDate: string;
     todayAttendance: unknown[];
     monthlyStats: unknown;
@@ -50,11 +54,11 @@ const statusConfig: Record<
     string,
     { variant: StatusVariant; label: string; timeColor?: string }
 > = {
-    Present:    { variant: "present",    label: "HADIR" },
-    Late:       { variant: "late",       label: "TERLAMBAT", timeColor: "text-warning" },
-    Absent:     { variant: "absent",     label: "ALPA" },
-    Pending:    { variant: "pending",    label: "PENDING IZIN" },
-    Permission: { variant: "approved",   label: "DIIZINKAN" },
+    Present: { variant: "present", label: "HADIR" },
+    Late: { variant: "late", label: "TERLAMBAT", timeColor: "text-warning" },
+    Absent: { variant: "absent", label: "ALPA" },
+    Pending: { variant: "pending", label: "PENDING IZIN" },
+    Permission: { variant: "approved", label: "DIIZINKAN" },
 };
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -91,7 +95,7 @@ export default function Dashboard({
     return (
         <AdminLayout title="Dashboard Admin" activeMenu="Dashboard">
             {/* ── Header: "Monitoring Live" + Filter ── */}
-            <div className="bg-surface border border-border rounded-xl p-5 mb-5 shadow-sm">
+            <div className="bg-surface border border-border rounded-xl p-4 mb-5 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                     <h1 className="text-[20px] font-bold text-text-primary font-inter">
                         Monitoring Live
@@ -136,17 +140,33 @@ export default function Dashboard({
 
             {/* ── Stat Cards ── */}
             <section className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-5">
-                <StatCard label="Total Siswa"   value={stats.total_students} color="grey"  />
-                <StatCard label="Terverifikasi Hadir" value={stats.verified_present} color="green" />
-                <StatCard label="Terlambat"            value={stats.late}             color="amber" />
-                <StatCard label="Sakit / Izin"         value={stats.sick_permit}      color="blue"  />
-                <StatCard label="Tidak Hadir"          value={stats.absent}           color="red"   />
+                <StatCard
+                    label="Total Siswa"
+                    value={stats.total_students}
+                    color="grey"
+                />
+                <StatCard
+                    label="Hadir Terdata"
+                    value={stats.verified_present}
+                    color="green"
+                />
+                <StatCard label="Terlambat" value={stats.late} color="amber" />
+                <StatCard
+                    label="Sakit / Izin"
+                    value={stats.sick_permit}
+                    color="blue"
+                />
+                <StatCard
+                    label="Alpa (Kosong)"
+                    value={stats.absent}
+                    color="red"
+                />
             </section>
 
             {/* ── Perhatian Khusus Hari Ini ── */}
             <section className="bg-surface border border-border rounded-xl shadow-sm overflow-hidden">
                 {/* Section header */}
-                <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+                <div className="px-6 py-4 border-b border-border flex items-center bg-muted justify-between">
                     <h2 className="text-[15px] font-bold text-text-primary font-inter">
                         Perhatian Khusus Hari Ini
                     </h2>
@@ -163,7 +183,8 @@ export default function Dashboard({
                     <div className="py-16 flex flex-col items-center gap-3 text-text-inactive">
                         <i className="fas fa-filter text-3xl" />
                         <p className="text-[14px] font-inter">
-                            Pilih kelas di filter atas untuk menampilkan data siswa.
+                            Pilih kelas di filter atas untuk menampilkan data
+                            siswa.
                         </p>
                     </div>
                 ) : students.length === 0 ? (
@@ -199,10 +220,12 @@ export default function Dashboard({
                             </thead>
                             <tbody>
                                 {students.map((s) => {
-                                    const cfg = statusConfig[s.status] ?? statusConfig["Absent"];
-                                    const isAbsent     = s.status === "Absent";
-                                    const isPending    = s.status === "Pending";
-                                    const isLate       = s.status === "Late";
+                                    const cfg =
+                                        statusConfig[s.status] ??
+                                        statusConfig["Absent"];
+                                    const isAbsent = s.status === "Absent";
+                                    const isPending = s.status === "Pending";
+                                    const isLate = s.status === "Late";
 
                                     return (
                                         <tr
@@ -210,7 +233,7 @@ export default function Dashboard({
                                             className="border-b border-border last:border-b-0 hover:bg-muted/50 transition-colors"
                                         >
                                             {/* NISN */}
-                                            <td className="px-6 py-3.5 text-[14px] text-text-primary font-medium">
+                                            <td className="px-6 py-3.5 text-[14px] text-text-primary font-semibold">
                                                 {s.nisn || s.nis}
                                             </td>
 
@@ -234,8 +257,15 @@ export default function Dashboard({
                                                         Belum ada kabar
                                                     </span>
                                                 ) : isLate ? (
-                                                    <span className={cfg.timeColor ?? "text-text-primary"}>
-                                                        {s.check_in_time ? `${s.check_in_time} WIB` : "—"}
+                                                    <span
+                                                        className={
+                                                            cfg.timeColor ??
+                                                            "text-text-primary"
+                                                        }
+                                                    >
+                                                        {s.check_in_time
+                                                            ? `${s.check_in_time} WIB`
+                                                            : "—"}
                                                     </span>
                                                 ) : (
                                                     <span className="text-text-secondary">
@@ -247,13 +277,17 @@ export default function Dashboard({
                                             {/* Tindakan */}
                                             <td className="px-4 py-3.5 text-right">
                                                 {isAbsent ? (
-                                                    <span className="text-text-placeholder text-[14px]">—</span>
+                                                    <span className="text-text-placeholder text-[14px]">
+                                                        —
+                                                    </span>
                                                 ) : isPending ? (
                                                     <Button
                                                         variant="primary"
                                                         size="sm"
                                                         onClick={() =>
-                                                            router.get("/admin/leave-verification")
+                                                            router.get(
+                                                                "/leave-verification",
+                                                            )
                                                         }
                                                     >
                                                         Verifikasi Izin
@@ -263,9 +297,13 @@ export default function Dashboard({
                                                         variant="outline"
                                                         size="sm"
                                                         onClick={() =>
-                                                            router.get("/admin/master-data", {
-                                                                highlight: s.id,
-                                                            })
+                                                            router.get(
+                                                                "/master-data",
+                                                                {
+                                                                    highlight:
+                                                                        s.id,
+                                                                },
+                                                            )
                                                         }
                                                     >
                                                         Lihat Detail

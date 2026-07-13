@@ -38,7 +38,7 @@ export default function MonthlyRecap({
         const val = e.target.value;
         setClassId(val);
         router.get(
-            "/admin/monthly-recap",
+            "/monthly-recap",
             { class_id: val || undefined },
             { preserveState: true }
         );

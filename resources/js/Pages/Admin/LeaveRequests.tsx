@@ -71,7 +71,7 @@ export default function LeaveRequests({ leaveRequests, filters }: PageProps) {
 
     const handleFilter = (extra?: Record<string, string | undefined>) => {
         router.get(
-            "/admin/leave-requests",
+            "/leave-requests",
             {
                 status: statusTab || undefined,
                 category: categoryFilter || undefined,
@@ -197,7 +197,7 @@ export default function LeaveRequests({ leaveRequests, filters }: PageProps) {
                     perPage={leaveRequests.per_page}
                     onPageChange={(page) =>
                         router.get(
-                            "/admin/leave-requests",
+                            "/leave-requests",
                             {
                                 page,
                                 status: statusTab || undefined,

@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
     );
 
     // ─── Admin (role:admin) ───
-    Route::middleware('role:admin')->prefix('/admin')->group(function () {
+    Route::middleware('role:admin')->group(function () {
         // Master Data
         Route::prefix('/master-data')->group(function () {
             Route::get('/', [StudentController::class, 'index'])->name(

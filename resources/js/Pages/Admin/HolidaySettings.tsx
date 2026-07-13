@@ -105,7 +105,7 @@ export default function HolidaySettings({
         }));
 
         router.post(
-            "/admin/settings/time-settings",
+            "/settings/time-settings",
             { settings },
             {
                 preserveState: true,
@@ -119,7 +119,7 @@ export default function HolidaySettings({
         if (!holidayDate) return;
 
         router.post(
-            "/admin/settings/holidays",
+            "/settings/holidays",
             { holiday_date: holidayDate, description: holidayDesc },
             {
                 preserveState: true,
@@ -137,7 +137,7 @@ export default function HolidaySettings({
 
     const confirmDeleteHoliday = () => {
         if (deleteHolidayId === null) return;
-        router.delete(`/admin/settings/holidays/${deleteHolidayId}`, {
+        router.delete(`/settings/holidays/${deleteHolidayId}`, {
             preserveState: true,
             onSuccess: () => setDeleteHolidayId(null),
         });
@@ -337,7 +337,7 @@ export default function HolidaySettings({
                         value={filters.year ?? currentYear.toString()}
                         onChange={(e) =>
                             router.get(
-                                "/admin/settings",
+                                "/settings",
                                 { year: e.target.value, month: filters.month },
                                 { preserveState: true },
                             )
@@ -357,7 +357,7 @@ export default function HolidaySettings({
                         value={filters.month ?? ""}
                         onChange={(e) =>
                             router.get(
-                                "/admin/settings",
+                                "/settings",
                                 { year: filters.year, month: e.target.value },
                                 { preserveState: true },
                             )
@@ -387,7 +387,7 @@ export default function HolidaySettings({
                     perPage={holidays.per_page}
                     onPageChange={(page) =>
                         router.get(
-                            "/admin/settings",
+                            "/settings",
                             { page, year: filters.year, month: filters.month },
                             { preserveState: true },
                         )

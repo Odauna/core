@@ -34,7 +34,7 @@ export function useClasses() {
         params: FetchClassesParams = {},
         options?: UseClassesOptions,
     ) => {
-        router.get("/admin/master-data", params, {
+        router.get("/master-data", params, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,
@@ -45,7 +45,7 @@ export function useClasses() {
         data: CreateClassData,
         options?: UseClassesOptions,
     ) => {
-        router.post("/admin/master-data/classes", data, {
+        router.post("/master-data/classes", data, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,
@@ -57,7 +57,7 @@ export function useClasses() {
         options?: UseClassesOptions,
     ) => {
         const { id, ...rest } = data;
-        router.put(`/admin/master-data/classes/${id}`, rest, {
+        router.put(`/master-data/classes/${id}`, rest, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,
@@ -65,7 +65,7 @@ export function useClasses() {
     };
 
     const deleteClass = (id: number, options?: UseClassesOptions) => {
-        router.delete(`/admin/master-data/classes/${id}`, {
+        router.delete(`/master-data/classes/${id}`, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,
@@ -74,14 +74,14 @@ export function useClasses() {
 
     const fetchEnrolment = (classId?: string, options?: UseClassesOptions) => {
         router.get(
-            "/admin/class-enrolment",
+            "/class-enrolment",
             { class_id: classId || undefined },
             { preserveState: true, ...options },
         );
     };
 
     const assignStudent = (data: EnrolParams, options?: UseClassesOptions) => {
-        router.post("/admin/class-enrolment/assign", data, {
+        router.post("/class-enrolment/assign", data, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,
@@ -89,7 +89,7 @@ export function useClasses() {
     };
 
     const removeStudent = (studentId: number, options?: UseClassesOptions) => {
-        router.delete(`/admin/class-enrolment/remove/${studentId}`, {
+        router.delete(`/class-enrolment/remove/${studentId}`, {
             preserveState: options?.preserveState ?? true,
             onSuccess: options?.onSuccess,
             onError: options?.onError,

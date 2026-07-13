@@ -121,7 +121,7 @@ export default function Monitoring({
 
     const handleFilter = () => {
         router.get(
-            "/admin/monitoring",
+            "/monitoring",
             { class_id: classId || undefined },
             { preserveState: true },
         );
@@ -180,7 +180,7 @@ export default function Monitoring({
                         <Button
                             variant="primary"
                             size="sm"
-                            onClick={() => router.get("/admin/leave-verification")}
+                            onClick={() => router.get("/leave-verification")}
                             className="bg-primary hover:bg-primary/90 text-white rounded text-[12px] px-3 py-1 font-semibold"
                         >
                             Verifikasi Izin
@@ -191,7 +191,7 @@ export default function Monitoring({
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => router.get(`/admin/master-data`)}
+                        onClick={() => router.get(`/master-data`)}
                         className="border border-border text-text-primary hover:bg-background rounded text-[12px] px-3 py-1 font-semibold"
                     >
                         Lihat Detail

@@ -5,6 +5,7 @@ import Navbar from "@/Components/Navbar";
 import Sidebar from "@/Components/Sidebar";
 import ErrorBoundary from "@/Components/ErrorBoundary";
 import Toast from "@/Components/Toast";
+import type { SidebarMenuItem } from "@/types/component";
 
 interface AdminLayoutProps {
     title?: string;
@@ -13,12 +14,43 @@ interface AdminLayoutProps {
     username?: string;
     userInitial?: string;
 }
-
+const sidebarMenuItems: SidebarMenuItem[] = [
+    {
+        label: "Dashboard",
+        icon: "fa-home",
+        status: "active",
+        href: "/dashboard",
+    },
+    {
+        label: "Data Master",
+        icon: "fa-database",
+        status: "default",
+        href: "/master-data",
+    },
+    {
+        label: "Enrolment Kelas",
+        icon: "fa-chalkboard-teacher",
+        status: "default",
+        href: "/class-enrolment",
+    },
+    {
+        label: "Atur Waktu & Libur",
+        icon: "fa-calendar-alt",
+        status: "default",
+        href: "/settings",
+    },
+    {
+        label: "Laporan Rekap",
+        icon: "fa-file-alt",
+        status: "default",
+        href: "/monthly-recap",
+    },
+];
 const bottomNavItems = [
     { label: "Dashboard", icon: "fa-th-large", href: "/dashboard" },
-    { label: "Data", icon: "fa-database", href: "/admin/master-data" },
-    { label: "Presensi", icon: "fa-video", href: "/admin/monitoring" },
-    { label: "Izin", icon: "fa-file-signature", href: "/admin/leave-requests" },
+    { label: "Data", icon: "fa-database", href: "/master-data" },
+    { label: "Presensi", icon: "fa-video", href: "/monitoring" },
+    { label: "Izin", icon: "fa-file-signature", href: "/leave-requests" },
 ];
 
 export default function AdminLayout({
@@ -66,6 +98,7 @@ export default function AdminLayout({
 
                 {/* ── Desktop Sidebar ── */}
                 <Sidebar
+                    menuItems={sidebarMenuItems}
                     activeMenu={activeMenu}
                     className="hidden lg:flex"
                 />
@@ -138,6 +171,7 @@ export default function AdminLayout({
                         </button>
                     </div>
                     <Sidebar
+                        menuItems={sidebarMenuItems}
                         activeMenu={activeMenu}
                         className="!w-full !rounded-none !p-0 !bg-transparent"
                     />

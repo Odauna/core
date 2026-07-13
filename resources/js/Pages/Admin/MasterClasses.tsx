@@ -67,7 +67,7 @@ export default function MasterClasses({
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         router.get(
-            "/admin/classes",
+            "/classes",
             { search: search || undefined },
             { preserveState: true },
         );
@@ -100,7 +100,7 @@ export default function MasterClasses({
         };
 
         if (editId) {
-            router.put(`/admin/master-data/classes/${editId}`, payload, {
+            router.put(`/master-data/classes/${editId}`, payload, {
                 preserveState: true,
                 onSuccess: () => {
                     setShowModal(false);
@@ -109,7 +109,7 @@ export default function MasterClasses({
                 onError: () => setLoading(false),
             });
         } else {
-            router.post("/admin/master-data/classes", payload, {
+            router.post("/master-data/classes", payload, {
                 preserveState: true,
                 onSuccess: () => {
                     setShowModal(false);
@@ -127,7 +127,7 @@ export default function MasterClasses({
 
     const handleDelete = () => {
         if (deleteId === null) return;
-        router.delete(`/admin/master-data/classes/${deleteId}`, {
+        router.delete(`/master-data/classes/${deleteId}`, {
             preserveState: true,
             onSuccess: () => {
                 setShowDeleteModal(false);
@@ -235,7 +235,7 @@ export default function MasterClasses({
                     perPage={schoolClasses.per_page}
                     onPageChange={(page) =>
                         router.get(
-                            "/admin/classes",
+                            "/classes",
                             { page, search: search || undefined },
                             { preserveState: true },
                         )

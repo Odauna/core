@@ -89,7 +89,7 @@ export default function LeaveVerification({
         const s = status ?? statusFilter;
         const c = category ?? categoryFilter;
         router.get(
-            "/admin/leave-verification",
+            "/leave-verification",
             { status: s || undefined, category: c || undefined },
             { preserveState: true },
         );
@@ -97,7 +97,7 @@ export default function LeaveVerification({
 
     const handleApprove = (id: number) => {
         if (confirm("Setujui izin ini?")) {
-            router.patch(`/admin/leave-verification/${id}/approve`, undefined, {
+            router.patch(`/leave-verification/${id}/approve`, undefined, {
                 preserveState: true,
             });
         }
@@ -105,7 +105,7 @@ export default function LeaveVerification({
 
     const handleReject = (id: number) => {
         if (confirm("Tolak izin ini?")) {
-            router.patch(`/admin/leave-verification/${id}/reject`, undefined, {
+            router.patch(`/leave-verification/${id}/reject`, undefined, {
                 preserveState: true,
             });
         }
@@ -250,7 +250,7 @@ export default function LeaveVerification({
                     perPage={leaveRequests.per_page}
                     onPageChange={(page) => {
                         router.get(
-                            "/admin/leave-verification",
+                            "/leave-verification",
                             {
                                 page,
                                 status: statusFilter || undefined,
