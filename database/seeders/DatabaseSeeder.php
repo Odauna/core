@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         ]);
         $admin->assignRole('admin');
 
-        // ─── 3. Teachers (5) ───
+        // ─── 3. Teachers (7) ───
         $teacherUsers = collect();
         $teacherNames = [
             [
@@ -63,6 +63,17 @@ class DatabaseSeeder extends Seeder
                 'username' => 'rudi',
                 'name' => 'Rudi Hermawan, S.Pd.',
                 'email' => 'rudi@smauii.sch.id',
+            ],
+            // ─── Extra Teachers (not assigned as homeroom) ───
+            [
+                'username' => 'g_ahmad',
+                'name' => 'Ahmad Fauzi, S.Pd.',
+                'email' => 'ahmad.fauzi@smauii.sch.id',
+            ],
+            [
+                'username' => 'g_rina',
+                'name' => 'Rina Wati, S.Pd.',
+                'email' => 'rina.wati@smauii.sch.id',
             ],
         ];
 

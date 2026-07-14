@@ -1,7 +1,10 @@
 // ─── UI Primitives ───
 export { default as Badge } from "@/Components/ui/Badge";
 export { default as Button } from "@/Components/ui/Button";
+export { default as Card } from "@/Components/ui/Card";
 export { default as Input } from "@/Components/ui/Input";
+export { default as PageHeader } from "@/Components/ui/PageHeader";
+export { default as SearchBar } from "@/Components/ui/SearchBar";
 export { default as StatCard } from "@/Components/ui/StatCard";
 export { default as StatusBadge } from "@/Components/ui/StatusBadge";
 export { default as Table, Pagination } from "@/Components/ui/Table";
@@ -27,6 +30,7 @@ export { default as ActionButton } from "@/Components/ui/ActionButton";
 export { default as Toggle } from "@/Components/ui/Toggle";
 export { default as Checkbox } from "@/Components/ui/Checkbox";
 export { default as Radio, RadioGroup } from "@/Components/ui/Radio";
+export { default as SelectInput } from "@/Components/ui/SelectInput";
 
 // ─── Feedback ───
 export { default as LoadingSpinner } from "@/Components/LoadingSpinner";

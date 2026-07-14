@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\SchoolClass;
 use App\Models\Teacher;
 use App\Services\SchoolClassService;
 use Illuminate\Http\Request;
@@ -21,9 +22,26 @@ class SchoolClassController extends Controller
             request()->only(['search']),
         );
 
+        $assignedTeacherIds = SchoolClass::whereNotNull('teacher_id')
+            ->pluck('teacher_id')
+            ->unique();
+
+        $availableTeachers = Teacher::whereNotIn('id', $assignedTeacherIds)
+            ->select(['id', 'name'])
+            ->orderBy('name')
+            ->get();
+
+        $total = $classes->total();
+        $isClientMode = $total <= 100;
+
         return Inertia::render('Admin/MasterData', [
             'activeTab' => 'classes',
             'schoolClasses' => $classes,
+            'allTeachers' => $availableTeachers,
+            'searchConfig' => [
+                'mode' => $isClientMode ? 'client' : 'server',
+                'allData' => $isClientMode ? $classes->all() : null,
+            ],
             'filters' => request()->only(['search']),
         ]);
     }
@@ -52,7 +70,7 @@ class SchoolClassController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => 'required|string|max:50|unique:school_classes,name',
             'level' => 'nullable|string|in:X,XI,XII',
             'teacher_id' => 'nullable|exists:teachers,id',
             'capacity' => 'nullable|integer|min:1',
@@ -75,7 +93,7 @@ class SchoolClassController extends Controller
     public function update(Request $request, int $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => 'required|string|max:50|unique:school_classes,name,' . $id,
             'level' => 'nullable|string|in:X,XI,XII',
             'teacher_id' => 'nullable|exists:teachers,id',
             'capacity' => 'nullable|integer|min:1',

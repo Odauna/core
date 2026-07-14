@@ -1,7 +1,12 @@
-import { router } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import {
     Button,
+    Card,
+    Input,
+    SelectInput,
+    PageHeader,
+    SearchBar,
     ActionButton,
     StatusBadge,
     Table,
@@ -55,11 +60,18 @@ interface PaginatedData<T> {
     per_page: number;
 }
 
+interface SearchConfig {
+    mode: "client" | "server";
+    allData?: SchoolClass[];
+}
+
 interface PageProps {
     students: PaginatedData<Student>;
     teachers?: PaginatedData<Teacher>;
+    allTeachers?: Teacher[];
     schoolClasses?: PaginatedData<SchoolClass>;
     guardians?: PaginatedData<Guardian>;
+    searchConfig?: SearchConfig;
     activeTab?: string;
     filters: Record<string, string | undefined>;
 }
@@ -88,8 +100,10 @@ const tabs = [
 export default function MasterData({
     students,
     teachers,
+    allTeachers,
     schoolClasses,
     guardians,
+    searchConfig,
     activeTab,
     filters,
 }: PageProps) {
@@ -103,6 +117,31 @@ export default function MasterData({
         "students",
     );
 
+    const [allClasses, setAllClasses] = useState<SchoolClass[]>(
+        () => searchConfig?.allData || [],
+    );
+    const [filteredClasses, setFilteredClasses] = useState<SchoolClass[]>(
+        () => searchConfig?.allData || schoolClasses?.data || [],
+    );
+
+    const { data: formData, setData: setFormData, post, processing, reset } = useForm({
+        name: "",
+        teacher_id: null as number | null,
+        capacity: "",
+        level: "X",
+    });
+
+    const { errors } = usePage().props as { errors: Record<string, string> };
+
+    const handleCreateClass = (e: React.FormEvent) => {
+        e.preventDefault();
+        post("/master-data/classes", {
+            onSuccess: () => {
+                reset();
+            },
+        });
+    };
+
     const switchTab = (tab: string) => {
         setCurrentTab(tab);
         setSelectedIds([]);
@@ -113,13 +152,30 @@ export default function MasterData({
         );
     };
 
-    const handleSearch = (e: React.FormEvent) => {
+    const handleSearch = (value: string) => {
+        setSearch(value);
+
+        if (searchConfig?.mode === "client" && currentTab === "class") {
+            const filtered = allClasses.filter(
+                (c) =>
+                    c.name.toLowerCase().includes(value.toLowerCase()) ||
+                    c.teacher?.name
+                        ?.toLowerCase()
+                        .includes(value.toLowerCase()),
+            );
+            setFilteredClasses(filtered);
+        } else {
+            router.get(
+                tabRoutes[currentTab] ?? "/master-data",
+                { search: value || undefined },
+                { preserveState: true },
+            );
+        }
+    };
+
+    const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get(
-            tabRoutes[currentTab] ?? "/master-data",
-            { search: search || undefined },
-            { preserveState: true },
-        );
+        handleSearch(search);
     };
 
     const handleDelete = (entity: string, id: number) => {
@@ -346,7 +402,7 @@ export default function MasterData({
                         <Toolbar
                             search={search}
                             setSearch={setSearch}
-                            handleSearch={handleSearch}
+                            handleSearch={handleSearchSubmit}
                             onImport={() => {
                                 setImportEntity("students");
                                 setImportModalOpen(true);
@@ -384,7 +440,7 @@ export default function MasterData({
                         <Toolbar
                             search={search}
                             setSearch={setSearch}
-                            handleSearch={handleSearch}
+                            handleSearch={handleSearchSubmit}
                             onImport={() => {
                                 setImportEntity("teachers");
                                 setImportModalOpen(true);
@@ -420,67 +476,118 @@ export default function MasterData({
                 {currentTab === "class" && schoolClasses?.data && (
                     <div className="grid grid-cols-5 gap-3">
                         <div className="col-span-3">
-                            <Toolbar
-                                search={search}
-                                setSearch={setSearch}
-                                handleSearch={handleSearch}
-                            />
-                            <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
+                            <Card className="p-4 lg:p-6">
+                                <PageHeader>
+                                    <SearchBar
+                                        value={search}
+                                        onChange={setSearch}
+                                        onSearch={handleSearch}
+                                        autoSearch={
+                                            searchConfig?.mode !== "client"
+                                        }
+                                        debounceMs={300}
+                                    />
+                                </PageHeader>
                                 <Table
                                     columns={classColumns}
-                                    data={schoolClasses.data}
+                                    data={
+                                        searchConfig?.mode === "client"
+                                            ? filteredClasses
+                                            : schoolClasses.data
+                                    }
                                     keyExtractor={(c: SchoolClass) => c.id}
                                 />
-                                {schoolClasses.total > 0 && (
-                                    <Pagination
-                                        currentPage={schoolClasses.current_page}
-                                        totalPages={schoolClasses.last_page}
-                                        totalItems={schoolClasses.total}
-                                        onPageChange={(page) =>
-                                            router.get(
-                                                "/master-data/classes",
-                                                {
-                                                    page,
-                                                },
-                                                { preserveState: true },
-                                            )
-                                        }
-                                    />
-                                )}
-                            </div>
+                                {searchConfig?.mode !== "client" &&
+                                    schoolClasses.total > 0 && (
+                                        <Pagination
+                                            currentPage={
+                                                schoolClasses.current_page
+                                            }
+                                            totalPages={schoolClasses.last_page}
+                                            totalItems={schoolClasses.total}
+                                            onPageChange={(page) =>
+                                                router.get(
+                                                    "/master-data/classes",
+                                                    {
+                                                        page,
+                                                    },
+                                                    { preserveState: true },
+                                                )
+                                            }
+                                        />
+                                    )}
+                            </Card>
                         </div>
-                        <div className="col-span-2 bg-surface block border-3 border-dashed rounded-2xl border-gray-400">
-                            <div className="grid grid-rows-5 m-3">
-                                <h2 className="text-primary font-semibold">
+                        <Card className="col-span-2 border-2 border-dashed border-border p-4 h-[480px] flex flex-col">
+                            <div className="text-primary py-2 text-lg font-semibold">
                                     Buat Kelas Baru
-                                </h2>
-                                <div>
-                                    <label>Nama / Kode Kelas</label>
-                                    <input
+                            </div>
+                            <form onSubmit={handleCreateClass} className="flex flex-col gap-2 flex-1">
+                                <div className="grid grid-cols-3 gap-2 py-2">
+                                    <SelectInput
+                                        label="Tingkat"
+                                        options={[
+                                            { value: "X", label: "X" },
+                                            { value: "XI", label: "XI" },
+                                            { value: "XII", label: "XII" },
+                                        ]}
+                                        value={formData.level}
+                                        onChange={(val) =>
+                                            setFormData("level", (val as string) ?? "X")
+                                        }
+                                        className="col-span-1"
+                                        error={errors.level}
+                                    />
+                                    <Input
+                                        label="Nama / Kode Kelas"
                                         type="text"
                                         id="kode_kelas"
-                                        className="min-w-0 w-full flex-auto rounded-md bg-white/5 border-gray-300 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData("name", e.target.value)}
+                                        description="Nama kelas harus unik."
+                                        className="col-span-2"
+                                        error={errors.name}
                                     />
                                 </div>
-                                <div>
-                                    <label>Tugaskan Wali Kelas</label>
-                                    <input
-                                        type="text"
-                                        id="wali_kelas"
-                                        className="min-w-0 w-full flex-auto rounded-md bg-white/5 border-gray-300 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                                    />
-                                </div>
-                                <div>
-                                    <p>Kapasitas Maksimal</p>
-                                    <input
-                                        type="text"
-                                        id="kapasitas_kelas"
-                                        className="min-w-0 w-full flex-auto rounded-md bg-white/5 border-gray-300 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                                    />
-                                </div>
-                                <Button>Simpan Kelas Baru</Button>
-                            </div>
-                        </div>
+                                <SelectInput
+                                    label="Tugaskan Wali Kelas"
+                                    placeholder="-- Pilih Wali Kelas --"
+                                    description="Guru yang sudah menjadi Wali Kelas tidak akan muncul di sini."
+                                    options={(allTeachers || []).map((t) => ({
+                                        value: t.id,
+                                        label: t.name,
+                                    }))}
+                                    value={formData.teacher_id}
+                                    onChange={(val) =>
+                                        setFormData(
+                                            "teacher_id",
+                                            typeof val === "number" ? val : null,
+                                        )
+                                    }
+                                    className="py-2"
+                                    error={errors.teacher_id}
+                                />
+                                <Input
+                                    label="Kapasitas Maksimal"
+                                    type="number"
+                                    id="kapasitas"
+                                    min="0"
+                                    numeric
+                                    value={formData.capacity}
+                                    onChange={(e) => setFormData("capacity", e.target.value)}
+                                    className="py-2"
+                                    error={errors.capacity}
+                                />
+                                <Button
+                                    type="submit"
+                                    size="sm"
+                                    className="w-full h-10 mt-auto"
+                                    disabled={processing}
+                                >
+                                    {processing ? "Menyimpan..." : "Simpan Kelas Baru"}
+                                </Button>
+                            </form>
+                        </Card>
                     </div>
                 )}
 
@@ -490,7 +597,7 @@ export default function MasterData({
                         <Toolbar
                             search={search}
                             setSearch={setSearch}
-                            handleSearch={handleSearch}
+                            handleSearch={handleSearchSubmit}
                         />
                         <div className="bg-surface border border-border rounded-lg p-4 lg:p-6">
                             <Table
